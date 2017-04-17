@@ -24,6 +24,12 @@ paths:
     get:
       operationId: getAll
       description: get the movies list
+      parameters:
+      - name : review
+        description: review request in path
+        in: query
+        #required: true
+        type: boolean
       # define the type of response for Success "200" and Error
       responses:
         "200":
@@ -66,6 +72,11 @@ paths:
           type: string
           in: path
           required: true
+        - name : review
+          description: review request in path
+          in: query
+          #required: true
+          type: boolean
       responses:
         "200":
           description: Success
@@ -119,6 +130,41 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /review:
+    # our controller name
+    x-swagger-router-controller: movieCollection
+    get:
+      operationId: getrev
+      description: get the movies list
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetMoviesListResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      operationId: saveReview
+      description: add a new movie to the list
+      # review to be stored
+      parameters:
+        - name: movie
+          description: movie name requeired for review
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/Review"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GetMovieResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /swagger:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
@@ -158,6 +204,22 @@ definitions:
       - Name
     properties:
       Name:
+        type: string
+  Review:
+    type: object
+    required: 
+      - movie   
+      - reviewer
+      - rating  
+      - text
+    properties:
+      movie:
+        type: string
+      reviewer:
+        type: string
+      rating:
+        type: number
+      text:
         type: string
   MoviePut:
     type: object
